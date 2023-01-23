@@ -1,4 +1,5 @@
 from flask import Flask
+import json
 # from pathlib import Path
 # from flask_login import LoginManager
 # from flask_migrate import Migrate
@@ -8,9 +9,12 @@ from flask import Flask
 # database_name = "database.db"
 
 #read from key.txt
-APIKey = None
-with open('key.txt', 'r') as f:
-    APIKey = f.read()
+weatherAPIKey = None
+mapAPIKey = None
+with open('../client/src/config.json', 'r') as keys:
+    data = json.load(keys)
+    weatherAPIKey = data['weatherKey']
+    mapAPIKey = data['mapKey']
 
 
 def create_app():

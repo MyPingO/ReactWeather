@@ -1,5 +1,5 @@
 from flask import Flask
-from server import create_app, APIKey
+from server import create_app, weatherAPIKey, mapAPIKey
 
 app = create_app()
 
