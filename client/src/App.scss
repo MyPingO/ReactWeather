@@ -8,30 +8,32 @@
   height: 100%;
 }
 .mapDiv {
-  display:flex;
   flex-direction: row;
   width: fit-content;
   gap: 20px;
 }
 .mapData {
   margin-right: 100px;
+  position: absolute;
 }
 .location {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 2vw;
+}
+.locationSearch {
+  position: relative;
+}
+.coordinates {
+  display: flex;
+  position: absolute;
 }
 .latitude {
-  position: absolute;
-  top: 7%;
-  display: flex;
-  gap: 5px;
+  left: 0;
 }
 .longitude {
-  position: absolute;
-  top: 15%;
-  display: flex;
-  gap: 5px;
+  right: 0;
 }
-.coordinateValues {
+.coordinateValue {
   margin-top: 26px;
 }
