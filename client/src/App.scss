@@ -22,6 +22,8 @@
   gap: 2vw;
 }
 .locationSearch {
+  width: 100%;
+  text-align: center;
   position: relative;
 }
 .coordinates {
@@ -36,4 +38,7 @@
 }
 .coordinateValue {
   margin-top: 26px;
+}
+.weatherData {
+  text-align: center;
 }
