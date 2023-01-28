@@ -42,8 +42,8 @@ export default function MainMap() {
     }
 
     function setMapCenter() {
-        const lat = currentCoords.lat.toFixed(4);
-        const lng = currentCoords.lng.toFixed(4);
+        const lat = Number(currentCoords.lat.toFixed(4));
+        const lng = Number(currentCoords.lng.toFixed(4));
         
         setCenter({ lat: lat, lng: lng });
     }
@@ -54,9 +54,11 @@ export default function MainMap() {
     
     function onMouseMove(data) {
         const coordinates = data.latLng.toJSON();
+        const lat = Number(coordinates.lat.toFixed(4))
+        const lng = Number(coordinates.lng.toFixed(4))
         setCurrentCoords({
-            lat: coordinates.lat.toFixed(4),
-            lng: coordinates.lng.toFixed(4)
+            lat: lat,
+            lng: lng
         });
     }
     
@@ -84,6 +86,26 @@ export default function MainMap() {
 
     return isLoaded ? (
         <div>
+            <PlacesAutocomplete
+                className='locationSearch'
+                value={address}
+                apiKey={mapKey}
+                // onLoad={onLoad}
+                onChange={(data) => handleChange(data)}
+                onSelect={(data) => handleSelect(data)}>
+                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                    <div>
+                        <input {...getInputProps({ placeholder: "Search for location" })} className="locationInput" type="text"/>
+                        <div>
+                            {loading ? <div>Loading...</div> : null}
+                            {suggestions.map(suggestion => {
+                                const style = suggestion.active ? { backgroundColor: "#fafafa", cursor: "pointer" } : { backgroundColor: "#ffffff", cursor: "pointer" };
+                                return <div {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
+                            })}
+                        </div>
+                    </div>
+                )}
+            </PlacesAutocomplete>
             <GoogleMap
                 className="mainMap"
                 mapContainerStyle={containerStyle}
@@ -95,30 +117,10 @@ export default function MainMap() {
                 onMouseMove={(data) => onMouseMove(data)}
             >
                 { /* Child components, such as markers, info windows, etc. */}
-                <Marker position={center} onClick={(data) => setMapCenter(data)} text={'Hello'} />
+                <Marker position={center} onClick={(data) => console.log("Marker data: " + data) /*setMapCenter(data)*/} text={'Hello'} />
             </GoogleMap>
-            <PlacesAutocomplete
-                className='locationSearch'
-                value={address}
-                apiKey={mapKey}
-                // onLoad={onLoad}
-                onChange={(data) => handleChange(data)}
-                onSelect={(data) => handleSelect(data)}>
-                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                    <div>
-                        <input {...getInputProps({ placeholder: "Search for location" })} className="locationInput" type="text" />
-                        <div>
-                            {loading ? <div>Loading...</div> : null}
-                            {suggestions.map(suggestion => {
-                                const style = suggestion.active ? { backgroundColor: "#fafafa", cursor: "pointer" } : { backgroundColor: "#ffffff", cursor: "pointer" };
-                                return <div {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
-                            })}
-                        </div>
-                    </div>
-                )}
-            </PlacesAutocomplete>
             <div className="mapDataContainer">
-                <MapData coordinates={currentCoords} />
+                <MapData className = "mapData" coordinates={currentCoords} />
             </div>
             <div className="weatherContainer">
                 <WeatherData data={currentWeatherData} />
