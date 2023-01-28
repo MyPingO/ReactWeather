@@ -1,5 +1,5 @@
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import PlacesAutocomplete from 'react-places-autocomplete';
+import PlacesAutocomplete, {geocodeByAddress} from 'react-places-autocomplete';
 import MapData from './MapData';
 import WeatherData from './WeatherData';
 import config from './config.json';
@@ -62,9 +62,20 @@ export default function MainMap() {
         });
     }
     
-    function handleSelect(data) {
-        console.log(data);
-        setMapCenter();
+    function handleSelect(address) {
+        console.log(address);
+        geocodeByAddress(address)
+            .then(results => {
+                console.log(results);
+                const lat = results[0].geometry.location.lat();
+                const lng = results[0].geometry.location.lng();
+                console.log(typeof(lat), lng);
+                setCurrentCoords({
+                    lat: Number(lat.toFixed(4)),
+                    lng: Number(lng.toFixed(4))
+                });
+                setMapCenter();
+            });
     }
     
     function handleMapClick() {
