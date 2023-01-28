@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './App.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import WeatherApp from './App';
 import reportWebVitals from './reportWebVitals';
 

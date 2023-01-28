@@ -19,9 +19,9 @@ export default function WeatherData(props) {
         setWeatherStats();
         return (
             <div className="weatherData">
-            <h1>Weather Data</h1>
-            <h2 className="temperature">{temperatureCelcius}°C / {temperatureFahrenheit}°F</h2>
-            <h2 className="feelsLike">Feels like: {feelsLikeCelcius}°C / {feelsLikeFahrenheit}°F</h2>
+                <h1>Weather Data</h1>
+                <h2 className="temperature">{temperatureCelcius}°C / {temperatureFahrenheit}°F</h2>
+                <h2 className="feelsLike">Feels like: {feelsLikeCelcius}°C / {feelsLikeFahrenheit}°F</h2>
             </div>
         )
     }
