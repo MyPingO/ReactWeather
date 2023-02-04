@@ -1,57 +1,28 @@
-.mapAndWeather {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.locationSearch {
-  width: 75vw;
-  position: relative;
-}
-.locationInput {
-  top: 15%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-.searchIcon {
-  position: absolute;
-  top: 30%;
-  left: min(10px, 23%);
-}
-.mapData {
-  margin-right: 100px;
-}
-@media screen and (max-width: 400px) {
-  .searchIcon {
-    display: none;
-  }
-}
-.location {
-  display: flex;
-  justify-content: space-around;
-}
-.coordinates {
-  display: flex;
-}
-.coordsLabel {
-  font-size: calc(10px + 1vw);
-}
-.weatherReport {
-  text-align: center;
-}
-.weeklyReport {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1vw;
-  justify-content: center;
-  margin-left: 1vw;
-  margin-right: 1vw;
-}
 .card {
   border: none !important;
-  flex-basis: max(11%, 13rem);
-  color: white;
+  color : white;
+}
+.card.todaysCard{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  min-height: 450px;
+  width: 45vw;
+  min-width: 515px;
+  /* flex-basis: .75; */
+}
+@media screen and (max-width: 1031px) {
+  .card.todaysCard {
+    width: 90vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .card.todaysCard {
+    min-width: 300px;
+  }
+}
+.dailyCard {
+  flex-basis: max(13%, 15rem);
 }
 .card.BrokenClouds {
   background: linear-gradient(
@@ -60,10 +31,12 @@
   )!important;
 }
 .card.ClearSky {
-  background: linear-gradient(
-    to top,
-    rgb(147, 204, 255) 50%,
-    rgb(255, 238, 7) 115%
+  background-image: radial-gradient(
+    circle at top right,
+    rgb(255, 255, 255) 0%,
+    rgb(255, 235, 83) 5%,
+    rgb(140, 251, 255) 15%,
+    rgb(63, 204, 255) 50%
   ) !important;
 }
 .card.FewClouds {
@@ -104,11 +77,6 @@
     rgb(115, 115, 115),
     rgb(28, 81, 255) 100%
   ) !important;
-}
-.mainWeather {
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 }
 .card-text.description{
   font-size: 1.5rem;

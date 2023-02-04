@@ -1,4 +1,3 @@
-import './App.css';
 import MainMap from './MainMap';
 import React from 'react';
 

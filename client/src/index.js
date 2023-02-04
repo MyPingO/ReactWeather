@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import './App.css';
+import './CSS/App.css';
+import './CSS/cards.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import WeatherApp from './App';
 import reportWebVitals from './reportWebVitals';

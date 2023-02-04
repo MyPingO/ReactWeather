@@ -1,32 +1,48 @@
-import { GoogleMap, useJsApiLoader, Marker} from '@react-google-maps/api';
-import PlacesAutocomplete, { geocodeByAddress, geocodeByPlaceId} from 'react-places-autocomplete';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import PlacesAutocomplete, { geocodeByAddress, geocodeByPlaceId } from 'react-places-autocomplete';
 import MapData from './MapData';
-import WeatherData from './WeatherData';
+import WeeklyForecast from './WeeklyForecast';
 import config from './config.json';
 import { useState } from 'react';
 import React from 'react';
+import TodaysWeather from './TodaysWeather';
 
 const { mapKey, weatherKey } = config;
-const containerStyle = {
-    width: '75vw',
-    height: '20vw',
-    minHeight: '300px',
-    position: 'relative',
-};
+
 const libraries = ["places"];
 
+const defaultCenter = {
+    lat: 40.7256,
+    lng: -73.8625
+}
+//get the coords of the users location
+function getUserLocation() {
+    new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    })
+    .then((position) => {
+        console.log(position);
+        defaultCenter.lat = position.coords.latitude;
+        defaultCenter.lng = position.coords.longitude;
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+getUserLocation();
+
 export default function MainMap() {
-    
+
     const { isLoaded, loadError } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: mapKey,
         libraries: libraries
     });
-    
-    
+
+
     const [center, setCenter] = useState({
-        lat: 40.7256,
-        lng: -73.8625
+        lat: defaultCenter.lat,
+        lng: defaultCenter.lng
     });
     const [locationInputValue, setLocationInputValue] = useState("");
     const [currentCoords, setCurrentCoords] = useState(center);
@@ -47,45 +63,46 @@ export default function MainMap() {
     }
 
     function setMapCenter() {
-        const lat = Number(currentCoords.lat.toFixed(4));
-        const lng = Number(currentCoords.lng.toFixed(4));
+        const lat = currentCoords.lat;
+        const lng = currentCoords.lng;
 
         setCenter({ lat: lat, lng: lng });
         map.zoom = 10;
     }
 
     function onMouseMove(data) {
-        const coordinates = data.latLng.toJSON();
-        const lat = Number(coordinates.lat.toFixed(4))
-        const lng = Number(coordinates.lng.toFixed(4))
-        setCurrentCoords({
-            lat: lat,
-            lng: lng
-        });
+        
     }
 
     function handleSelect(address) {
         console.log("HANDLING SELECT");
         geocodeByAddress(address)
-        .then(results => {
-            setSelectedAddress(results[0].formatted_address)
-            console.log(results);
-            const lat = results[0].geometry.location.lat();
-            const lng = results[0].geometry.location.lng();
-            setCurrentCoords({
-                lat: Number(lat.toFixed(4)),
-                lng: Number(lng.toFixed(4))
+            .then(results => {
+                setSelectedAddress(results[0].formatted_address)
+                console.log(results);
+                const lat = results[0].geometry.location.lat();
+                const lng = results[0].geometry.location.lng();
+                setCurrentCoords({
+                    lat: lat,
+                    lng: lng
+                });
+                setMapCenter();
             });
-            setMapCenter();
-        });
         setLocationInputValue("");
 
     }
 
-    function handleMapClick() {
+    function handleMapClick(data) {
+        const coordinates = data.latLng.toJSON();
+        const lat = coordinates.lat
+        const lng = coordinates.lng
+        setCurrentCoords({
+            lat: lat,
+            lng: lng
+        });
         fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentCoords.lat},${currentCoords.lng}&result_type=locality|political&key=${mapKey}`
-            )
+        )
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -111,46 +128,52 @@ export default function MainMap() {
         setLocationInputValue(address);
     }
 
+    const containerStyle = {
+        width: '100%',
+        minwidth: '400px',
+        minHeight: '400px',
+        position: 'relative',
+    };
+
+    //TODO: Get current location on load
     return isLoaded ? (
         <div>
-            <div className='mapAndWeather'>
-                <div className='PlacesAutocomplete'>
-                    <PlacesAutocomplete
-                        className='Autocomplete'
-                        value={locationInputValue}
-                        apiKey={mapKey}
-                        // onLoad={onLoad}
-                        onChange={(data) => handleChange(data)}
-                        onSelect={(data) => handleSelect(data)}>
-                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                            <div>
-                                <div className="locationSearch">
-                                    <div>
-                                        <input className="form-control locationInput" {...getInputProps({ placeholder: "Search for location" })} type="text" value={locationInputValue}/>
+            <div className='searchAndWeather'>
+                <div className="mapAndSearch">
+                    <div className='PlacesAutocomplete'>
+                        <PlacesAutocomplete
+                            className='Autocomplete'
+                            value={locationInputValue}
+                            apiKey={mapKey}
+                            // onLoad={onLoad}
+                            onChange={(data) => handleChange(data)}
+                            onSelect={(data) => handleSelect(data)}>
+                            {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                <div>
+                                    <div className="locationSearch">
+                                        <input className="form-control locationInput" {...getInputProps({ placeholder: "Search for location" })} type="text" value={locationInputValue} />
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search searchIcon" viewBox="0 0 16 16">
                                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                                         </svg>
                                     </div>
-                                </div>
-                                <div style={{width:"100%", position:"absolute", zIndex:"1"}}>
-                                    <div className='suggestions'>
-                                        {loading ? <div>Loading...</div> : null}
-                                        {suggestions.map(suggestion => {
-                                            const style = suggestion.active ? { backgroundColor: "#ffffff", cursor: "pointer" } : { backgroundColor: "rgba(238,238,238,.85)", cursor: "pointer" };
-                                            return <div key={suggestion.description} {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
-                                        })}
+                                    <div style={{ width: "40vw", marginLeft: "2vw", position: "absolute", zIndex: "1" }}>
+                                        <div className='suggestions'>
+                                            {loading ? <div>Loading...</div> : null}
+                                            {suggestions.map(suggestion => {
+                                                const style = suggestion.active ? { backgroundColor: "#ffffff", cursor: "pointer" } : { backgroundColor: "rgba(238,238,238,.85)", cursor: "pointer" };
+                                                return <div key={suggestion.description} {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                    </PlacesAutocomplete>
-                </div>
-                <div className="mapContainer">
+                            )}
+                        </PlacesAutocomplete>
+                    </div>
                     <GoogleMap
                         className="mainMap"
                         mapContainerStyle={containerStyle}
                         center={center}
-                        options={{mapTypeControl: false, streetViewControl: false}}
+                        options={{ mapTypeControl: false, streetViewControl: false }}
                         zoom={10}
                         zIndex={0}
                         onLoad={(data) => onLoad(data)}
@@ -159,15 +182,16 @@ export default function MainMap() {
                         onMouseMove={(data) => onMouseMove(data)}
                     >
                         { /* Child components, such as markers, info windows, etc. */}
-                        <Marker position={center} onClick={(data) => console.log("Marker data: " + data) /*setMapCenter(data)*/} label=""/>
+                        <Marker position={center} onClick={(data) => console.log("Marker data: " + data) /*setMapCenter(data)*/} label="" />
+                    <br />
                     </GoogleMap>
                 </div>
+                <div className='locationAndTodaysCard'>
+                    <TodaysWeather className="todaysWeather" weatherData={oneClickWeatherData} location={selectedAddress} />
+                </div>
             </div>
-            <div className="mapDataContainer">
-                <MapData className="mapData" coordinates={currentCoords} />
-            </div>
-            <div className="weatherContainer">
-                <WeatherData className="weatherData" weatherData={oneClickWeatherData} location={selectedAddress}/>
+            <div className="weeklyWeatherContainer">
+                <WeeklyForecast className="weeklyForecast" weatherData={oneClickWeatherData} location={selectedAddress} />
             </div>
         </div>
     ) : <></>

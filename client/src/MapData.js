@@ -1,5 +1,3 @@
-import './App.css';
-
 export default function MapData(props) {
     const coordinates = props.coordinates;
 

@@ -1,69 +1,8 @@
-import './App.css';
 import React from 'react';
 
-let temperatureCelcius;
-let feelsLikeCelcius;
-let temperatureFahrenheit;
-let feelsLikeFahrenheit;
-const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const date = new Date();
-let day = weekday[date.getDay()];
-function WeatherData(props) {
-    // const defaultWeatherData = props.data.default;
-    const oneClickWeatherData = props.weatherData;
-    const location = props.location;
-    function setWeatherStats() {
-        temperatureCelcius = oneClickWeatherData.current.temp.toFixed(1);
-        feelsLikeCelcius = oneClickWeatherData.current.feels_like.toFixed(1);
-        temperatureFahrenheit = ((temperatureCelcius * 9 / 5) + 32).toFixed(0);
-        feelsLikeFahrenheit = ((feelsLikeCelcius * 9 / 5) + 32).toFixed(0);
-    }
-    function renderWeeklyReport() {
-        console.log("RENDERING WEEKLY REPORT");
-        console.log(oneClickWeatherData);
-        //store array of DailyWeatherWidget components
-        const dailyWeatherWidgets = [];
-        for (let i = 0; i < 8; i++) {
-            const day = (i == 0) ? "Today" : weekday[(date.getDay() + i) % 7];
-            const dailyData = oneClickWeatherData.daily[i];
-            //get description and make every word capitalized
-            const description = dailyData.weather[0].description;
-            const descriptionArray = description.split(" ");
-            for (let i = 0; i < descriptionArray.length; i++) {
-                descriptionArray[i] = descriptionArray[i].charAt(0).toUpperCase() + descriptionArray[i].slice(1);
-            }
-            dailyData.weather[0].description = descriptionArray.join(" ");
-            const dailyTemp = dailyData.temp.day.toFixed(1);
-            const dailyFeelsLike = dailyData.feels_like.day.toFixed(1);
-            const dailyTempFahrenheit = ((dailyTemp * 9 / 5) + 32).toFixed(0);
-            const dailyFeelsLikeFahrenheit = ((dailyFeelsLike * 9 / 5) + 32).toFixed(0);
-            const dailyWeatherWidget = <DailyWeatherWidget key={i} props={{ day, dailyData, dailyTemp, dailyFeelsLike, dailyTempFahrenheit, dailyFeelsLikeFahrenheit }} />
-            dailyWeatherWidgets.push(dailyWeatherWidget);
-        }
-        //return a map of DailyWeatherWidget components
-        return dailyWeatherWidgets.map((dailyWeatherWidget) => {
-            return dailyWeatherWidget;
-        })
-    }
-    if (oneClickWeatherData && location) {
-        setWeatherStats();
-
-        return (
-            <div className="weatherReport">
-                <h2>{location}</h2>
-                <br />
-                {/* <h2 className="temperature">{temperatureCelcius}°C / {temperatureFahrenheit}°F</h2>
-                <h2 className="feelsLike">Feels like: {feelsLikeCelcius}°C / {feelsLikeFahrenheit}°F</h2> */}
-                <div className="weeklyReport">
-                    {renderWeeklyReport()}
-                </div>
-            </div>
-        )
-    }
-}
-
-function DailyWeatherWidget(props) {
+function WeatherCard(props) {
     const data = props.props;
+    const className = data.className;
     const day = data.day;
     const dailyData = data.dailyData;
     const dailyTemp = data.dailyTemp;
@@ -92,7 +31,7 @@ function DailyWeatherWidget(props) {
     return data ? (
         //TODO: check for all weather description types
         //bootstrap card containing weather data for each day
-        <div className={"card " + (dailyData.weather[0].description).replaceAll(" ", '')}>
+        <div className={`card ${className} ${(dailyData.weather[0].description).replaceAll(" ", '')}`}>
             <div className="card-body">
                 <h4 className="card-title">{day}</h4>
                 <div className='mainWeather'>
@@ -114,7 +53,7 @@ function DailyWeatherWidget(props) {
                         <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                     </svg>{dailyData.uvi}<br />
                     {getRainIcon(dailyData.rain ? dailyData.rain : 0)} {dailyData.rain ? dailyData.rain.toFixed(2) : 0}mm<br />
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-snow weatherIcon snowIcon" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-snow weatherIcon snowIcon" viewBox="0 0 16 16">
                         <path d="M8 16a.5.5 0 0 1-.5-.5v-1.293l-.646.647a.5.5 0 0 1-.707-.708L7.5 12.793V8.866l-3.4 1.963-.496 1.85a.5.5 0 1 1-.966-.26l.237-.882-1.12.646a.5.5 0 0 1-.5-.866l1.12-.646-.884-.237a.5.5 0 1 1 .26-.966l1.848.495L7 8 3.6 6.037l-1.85.495a.5.5 0 0 1-.258-.966l.883-.237-1.12-.646a.5.5 0 1 1 .5-.866l1.12.646-.237-.883a.5.5 0 1 1 .966-.258l.495 1.849L7.5 7.134V3.207L6.147 1.854a.5.5 0 1 1 .707-.708l.646.647V.5a.5.5 0 1 1 1 0v1.293l.647-.647a.5.5 0 1 1 .707.708L8.5 3.207v3.927l3.4-1.963.496-1.85a.5.5 0 1 1 .966.26l-.236.882 1.12-.646a.5.5 0 0 1 .5.866l-1.12.646.883.237a.5.5 0 1 1-.26.966l-1.848-.495L9 8l3.4 1.963 1.849-.495a.5.5 0 0 1 .259.966l-.883.237 1.12.646a.5.5 0 0 1-.5.866l-1.12-.646.236.883a.5.5 0 1 1-.966.258l-.495-1.849-3.4-1.963v3.927l1.353 1.353a.5.5 0 0 1-.707.708l-.647-.647V15.5a.5.5 0 0 1-.5.5z" />
                     </svg> {dailyData.snow ? dailyData.snow.toFixed(2) : 0}mm
                 </p>
@@ -122,4 +61,4 @@ function DailyWeatherWidget(props) {
         </div>
     ) : <></>;
 }
-export default React.memo(WeatherData);
+export default React.memo(WeatherCard);

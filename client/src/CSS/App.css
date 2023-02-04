@@ -1,0 +1,75 @@
+.searchAndWeather{
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.mapAndSearch {
+  width: 35vw;
+  min-width: 450px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: .75;
+}
+.PlacesAutocomplete{
+  width: 100%;
+}
+.locationSearch {
+  width: 100%;
+  min-width: 200px;
+  position: relative;
+  margin-bottom: 10px;
+}
+.locationInput {
+  top: 15%;
+  text-align: center;
+}
+.searchIcon {
+  position: absolute;
+  top: 30%;
+  left: min(10px, 23%);
+}
+@media screen and (max-width: 1031px) {
+  .mapAndSearch {
+    width: 80vw;
+  }
+}
+/* TODO: Might not NEED this */
+/* .locationAndTodaysCard{
+  min-width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+.locationText {
+  width: 100%;
+  text-align: center;
+}
+.mapData {
+  margin-right: 100px;
+}
+@media screen and (max-width: 400px) {
+  .searchIcon {
+    display: none;
+  }
+}
+.coordinates {
+  display: flex;
+}
+.coordsLabel {
+  font-size: calc(10px + 1vw);
+}
+.weeklyReport {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  margin-right: 1vw;
+  margin-left: 1vw;
+  margin-top: 20px;
+  gap: 1vw;
+}
