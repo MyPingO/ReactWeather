@@ -1,13 +1,11 @@
 import React from 'react';
-import WeatherCard from './WeatherCard';
+import TodaysWeatherCard from './TodaysWeatherCard';
 
 function TodaysWeather(props) {
     // const defaultWeatherData = props.data.default;
     const oneClickWeatherData = props.weatherData;
     const location = props.location;
     function renderTodaysWeather() {
-        console.log("RENDERING WEEKLY REPORT");
-        console.log(oneClickWeatherData);
         const className = "todaysCard"
         const day = "Today";
         const dailyData = oneClickWeatherData.daily[0];
@@ -22,13 +20,14 @@ function TodaysWeather(props) {
         const dailyFeelsLike = dailyData.feels_like.day.toFixed(1);
         const dailyTempFahrenheit = ((dailyTemp * 9 / 5) + 32).toFixed(0);
         const dailyFeelsLikeFahrenheit = ((dailyFeelsLike * 9 / 5) + 32).toFixed(0);
-        const todaysWeatherCard = <WeatherCard key={0} props={{
+        const todaysWeatherCard = <TodaysWeatherCard key={0} props={{
             day,
             dailyData,
             dailyTemp,
             dailyFeelsLike,
             dailyTempFahrenheit,
             dailyFeelsLikeFahrenheit,
+            location,
             className
         }} />
 

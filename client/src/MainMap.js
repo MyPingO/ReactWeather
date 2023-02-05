@@ -3,7 +3,7 @@ import PlacesAutocomplete, { geocodeByAddress, geocodeByPlaceId } from 'react-pl
 import MapData from './MapData';
 import WeeklyForecast from './WeeklyForecast';
 import config from './config.json';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import TodaysWeather from './TodaysWeather';
 
@@ -32,14 +32,14 @@ function getUserLocation() {
 getUserLocation();
 
 export default function MainMap() {
-
+    
     const { isLoaded, loadError } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: mapKey,
         libraries: libraries
     });
-
-
+    
+    
     const [center, setCenter] = useState({
         lat: defaultCenter.lat,
         lng: defaultCenter.lng
@@ -50,6 +50,10 @@ export default function MainMap() {
     // const [defaultWeatherData, setDefaultWeatherData] = useState(null);
     const [oneClickWeatherData, setOneClickWeatherData] = useState(null);
     const [map, setMap] = useState(null);
+    
+    useEffect(() => {
+        setAddressAndOneClickWeather();
+    }, [currentCoords])
 
     function onLoad(GoogleMap) {
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
@@ -59,7 +63,7 @@ export default function MainMap() {
     }
 
     function onUnmount(map) {
-        setMap(null)
+        // setMap(null)
     }
 
     function setMapCenter() {
@@ -67,39 +71,47 @@ export default function MainMap() {
         const lng = currentCoords.lng;
 
         setCenter({ lat: lat, lng: lng });
-        map.zoom = 10;
-    }
-
-    function onMouseMove(data) {
-        
+        // map.zoom = 10;
     }
 
     function handleSelect(address) {
-        console.log("HANDLING SELECT");
+        console.log("HANDLING SELECT" + address);
         geocodeByAddress(address)
             .then(results => {
-                setSelectedAddress(results[0].formatted_address)
                 console.log(results);
                 const lat = results[0].geometry.location.lat();
                 const lng = results[0].geometry.location.lng();
+                console.log(lat, lng);
                 setCurrentCoords({
                     lat: lat,
                     lng: lng
                 });
-                setMapCenter();
             });
         setLocationInputValue("");
 
     }
 
     function handleMapClick(data) {
-        const coordinates = data.latLng.toJSON();
-        const lat = coordinates.lat
-        const lng = coordinates.lng
-        setCurrentCoords({
-            lat: lat,
-            lng: lng
-        });
+        console.log(data.latLng.toJSON());
+        if (locationInputValue === "") {
+            const coordinates = data.latLng.toJSON();
+            const lat = coordinates.lat
+            const lng = coordinates.lng
+            console.log(lat, lng);
+            setCurrentCoords({
+                lat: lat,
+                lng: lng
+            })
+        }
+        // fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${currentCoords.lat}&lon=${currentCoords.lng}&units=metric&appid=${weatherKey}`)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data)
+        //         setDefaultWeatherData(data);
+        //     });
+    }
+
+    function setAddressAndOneClickWeather() {
         fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentCoords.lat},${currentCoords.lng}&result_type=locality|political&key=${mapKey}`
         )
@@ -116,14 +128,8 @@ export default function MainMap() {
                 console.log(data);
                 setOneClickWeatherData(data);
             });
-        // fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${currentCoords.lat}&lon=${currentCoords.lng}&units=metric&appid=${weatherKey}`)
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log(data)
-        //         setDefaultWeatherData(data);
-        //     });
+        setMapCenter();
     }
-
     const handleChange = (address) => {
         setLocationInputValue(address);
     }
@@ -156,7 +162,7 @@ export default function MainMap() {
                                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                                         </svg>
                                     </div>
-                                    <div style={{ width: "100", position: "absolute", zIndex: "1" }}>
+                                    <div style={{ width: "100%", position: "absolute", zIndex: "1" }}>
                                         <div className='suggestions'>
                                             {loading ? <div>Loading...</div> : null}
                                             {suggestions.map(suggestion => {
@@ -179,7 +185,6 @@ export default function MainMap() {
                         onLoad={(data) => onLoad(data)}
                         onUnmount={onUnmount}
                         onClick={(data) => handleMapClick(data)}
-                        onMouseMove={(data) => onMouseMove(data)}
                     >
                         { /* Child components, such as markers, info windows, etc. */}
                         <Marker position={center} onClick={(data) => console.log("Marker data: " + data) /*setMapCenter(data)*/} label="" />

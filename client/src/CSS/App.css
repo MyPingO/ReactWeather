@@ -5,14 +5,24 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 20px;
 }
 .mapAndSearch {
   width: 35vw;
-  min-width: 450px;
-  display: flex;
+  min-height: 400px;
+  /* display: flex; */
   flex-wrap: wrap;
   flex-grow: .75;
+}
+@media screen and (max-width: 1031px) {
+  .mapAndSearch {
+    width: 80vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .mapAndSearch {
+    width: 75vw;
+    min-height: 280px;
+  }
 }
 .Autocomplete{
   width: 100%;
@@ -34,11 +44,7 @@
   top: 30%;
   left: min(10px, 23%);
 }
-@media screen and (max-width: 1031px) {
-  .mapAndSearch {
-    width: 80vw;
-  }
-}
+
 /* TODO: Might not NEED this */
 /* .locationAndTodaysCard{
   min-width: 400px;
@@ -47,7 +53,7 @@
   align-items: center;
 } */
 .locationText {
-  width: 100%;
+  /* font-size: calc(10px + 2vw); */
   text-align: center;
 }
 .mapData {

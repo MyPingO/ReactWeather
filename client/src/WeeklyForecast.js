@@ -10,8 +10,6 @@ function WeeklyForecast(props) {
     const location = props.location;
 
     function renderWeeklyReport() {
-        console.log("RENDERING WEEKLY REPORT");
-        console.log(oneClickWeatherData);
         //store array of WeatherCard components
         const weatherCards = [];
         for (let i = 1; i < 8; i++) {

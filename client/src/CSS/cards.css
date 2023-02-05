@@ -1,8 +1,10 @@
 .card {
-  border: none !important;
+  /* border: none !important; */
+  border-color: black !important;
   color : white;
 }
 .card.todaysCard{
+  margin-left: 20px;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -14,6 +16,8 @@
 @media screen and (max-width: 1031px) {
   .card.todaysCard {
     width: 90vw;
+    margin-left: 0px;
+    margin-top: 20px;
   }
 }
 @media screen and (max-width: 600px) {
@@ -21,14 +25,13 @@
     min-width: 300px;
   }
 }
+@media screen and (max-width: 420px) {
+  .card.todaysCard {
+    min-width: 75vw;
+  }
+}
 .dailyCard {
   flex-basis: max(13%, 15rem);
-}
-.card.BrokenClouds {
-  background: linear-gradient(
-    rgb(115, 115, 115),
-    rgb(175, 175, 175)
-  )!important;
 }
 .card.ClearSky {
   background-image: radial-gradient(
@@ -37,25 +40,34 @@
     rgb(255, 235, 83) 5%,
     rgb(140, 251, 255) 15%,
     rgb(63, 204, 255) 50%
-  ) !important;
+    ) !important;
 }
 .card.FewClouds {
-  background: linear-gradient(
-    to top,
-    rgb(115, 115, 115) 5%,
-    rgb(147, 204, 255) 95%
-  ) !important;
-}
-.card.OvercastClouds {
-  background-color: rgb(115, 115, 115) !important;
-}
-.card.ScatteredClouds {
   color: rgb(0, 0, 0);
   background: linear-gradient(
     to top,
     rgb(211, 211, 211) 5%,
     rgb(147, 204, 255) 95%
-  ) !important;
+    ) !important;
+  }
+  .card.ScatteredClouds {
+  background: linear-gradient(
+    to top,
+    rgb(115, 115, 115) 5%,
+    rgb(147, 204, 255) 95%
+    ) !important;
+  }
+  .card.BrokenClouds {
+    background: linear-gradient(
+      rgb(115, 115, 115),
+      rgb(175, 175, 175)
+    )!important;
+  }
+.card.OvercastClouds {
+  background: linear-gradient(
+      rgb(46, 46, 46),
+      rgb(84, 84, 84)
+    )!important;
 }
 .card.LightRain {
   background: linear-gradient(
@@ -71,11 +83,43 @@
     rgb(48, 131, 255) 100%
   ) !important;
 }
-.card.HeavyIntensityRain {
+.card.HeavyRain {
   background: linear-gradient(
     to bottom,
     rgb(115, 115, 115),
     rgb(28, 81, 255) 100%
+  ) !important;
+}
+.card.RainandSnow {
+  color:black;
+  background: linear-gradient(
+    to bottom,
+    rgb(255, 255, 255) 25%,
+    rgb(28, 81, 255) 150%
+  ) !important;
+}
+.card.LightSnow {
+  color: black;
+  background: linear-gradient(
+    to bottom,
+    rgb(157, 157, 157),
+    rgb(255, 255, 255)
+  ) !important;
+}
+.card.Snow {
+  color: black;
+  background: linear-gradient(
+    to bottom,
+    rgb(195, 195, 195),
+    rgb(255, 255, 255)
+  ) !important;
+}
+.card.HeavySnow {
+  color: black;
+  background: linear-gradient(
+    to bottom,
+    rgb(230, 230, 230),
+    rgb(255, 255, 255)
   ) !important;
 }
 .card-text.description{
