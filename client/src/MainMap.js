@@ -140,23 +140,23 @@ export default function MainMap() {
         <div>
             <div className='searchAndWeather'>
                 <div className="mapAndSearch">
-                    <div className='PlacesAutocomplete'>
+                    <div className='Autocomplete'>
                         <PlacesAutocomplete
-                            className='Autocomplete'
+                            className='PlacesAutocomplete'
                             value={locationInputValue}
                             apiKey={mapKey}
                             // onLoad={onLoad}
                             onChange={(data) => handleChange(data)}
                             onSelect={(data) => handleSelect(data)}>
                             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                <div>
+                                <div className="locationSearchContainer">
                                     <div className="locationSearch">
                                         <input className="form-control locationInput" {...getInputProps({ placeholder: "Search for location" })} type="text" value={locationInputValue} />
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search searchIcon" viewBox="0 0 16 16">
                                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                                         </svg>
                                     </div>
-                                    <div style={{ width: "40vw", marginLeft: "2vw", position: "absolute", zIndex: "1" }}>
+                                    <div style={{ width: "100", position: "absolute", zIndex: "1" }}>
                                         <div className='suggestions'>
                                             {loading ? <div>Loading...</div> : null}
                                             {suggestions.map(suggestion => {

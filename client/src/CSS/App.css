@@ -14,8 +14,11 @@
   flex-wrap: wrap;
   flex-grow: .75;
 }
-.PlacesAutocomplete{
+.Autocomplete{
   width: 100%;
+}
+.locationSearchContainer {
+  position: relative;
 }
 .locationSearch {
   width: 100%;
@@ -24,7 +27,6 @@
   margin-bottom: 10px;
 }
 .locationInput {
-  top: 15%;
   text-align: center;
 }
 .searchIcon {
