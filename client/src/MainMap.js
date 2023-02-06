@@ -21,12 +21,10 @@ function getUserLocation() {
         navigator.geolocation.getCurrentPosition(resolve, reject);
     })
     .then((position) => {
-        console.log(position);
         defaultCenter.lat = position.coords.latitude;
         defaultCenter.lng = position.coords.longitude;
     })
     .catch((err) => {
-        console.log(err);
     })
 }
 getUserLocation();
@@ -55,6 +53,10 @@ export default function MainMap() {
         setAddressAndOneClickWeather();
     }, [currentCoords])
 
+    useEffect(() => {
+        setMapCenter(10);
+    }, [map])
+
     function onLoad(GoogleMap) {
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
         // const bounds = new window.google.maps.LatLngBounds(center);
@@ -66,22 +68,20 @@ export default function MainMap() {
         // setMap(null)
     }
 
-    function setMapCenter() {
+    function setMapCenter(zoomAmount) {
         const lat = currentCoords.lat;
         const lng = currentCoords.lng;
 
         setCenter({ lat: lat, lng: lng });
-        // map.zoom = 10;
+        if (map) map.setZoom(zoomAmount);
     }
 
     function handleSelect(address) {
         console.log("HANDLING SELECT" + address);
         geocodeByAddress(address)
             .then(results => {
-                console.log(results);
                 const lat = results[0].geometry.location.lat();
                 const lng = results[0].geometry.location.lng();
-                console.log(lat, lng);
                 setCurrentCoords({
                     lat: lat,
                     lng: lng
@@ -92,12 +92,10 @@ export default function MainMap() {
     }
 
     function handleMapClick(data) {
-        console.log(data.latLng.toJSON());
         if (locationInputValue === "") {
             const coordinates = data.latLng.toJSON();
             const lat = coordinates.lat
             const lng = coordinates.lng
-            console.log(lat, lng);
             setCurrentCoords({
                 lat: lat,
                 lng: lng
@@ -112,23 +110,23 @@ export default function MainMap() {
     }
 
     function setAddressAndOneClickWeather() {
-        fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentCoords.lat},${currentCoords.lng}&result_type=locality|political&key=${mapKey}`
-        )
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setSelectedAddress(data.results[0].formatted_address);
-            })
-            .catch(error => console.error(error));
         // geocodeByLatLng(currentCoords).then(results => {console.log(results); setSelectedAddress(results[0].formatted_address);})
         fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${currentCoords.lat}&lon=${currentCoords.lng}&units=metric&appid=${weatherKey}`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setOneClickWeatherData(data);
-            });
-        setMapCenter();
+            .then(weatherData => {
+                fetch(
+                    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentCoords.lat},${currentCoords.lng}&result_type=locality|political&key=${mapKey}`
+                )
+                .then(response => response.json())
+                .then(location => {
+                    setOneClickWeatherData(weatherData);
+                    setSelectedAddress(location.results[0].formatted_address);
+                })
+                .catch(error => console.error(error));
+            })
+            .catch(error => console.error(error));
+        
+        setMapCenter(12);
     }
     const handleChange = (address) => {
         setLocationInputValue(address);
@@ -180,7 +178,6 @@ export default function MainMap() {
                         mapContainerStyle={containerStyle}
                         center={center}
                         options={{ mapTypeControl: false, streetViewControl: false }}
-                        zoom={10}
                         zIndex={0}
                         onLoad={(data) => onLoad(data)}
                         onUnmount={onUnmount}

@@ -30,7 +30,6 @@ function TodaysWeather(props) {
             location,
             className
         }} />
-
         return todaysWeatherCard;
     }
     if (oneClickWeatherData && location) {
