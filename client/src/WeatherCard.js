@@ -1,46 +1,16 @@
 import React from 'react';
+import { getSimplifiedDescription, getRainIcon } from './utils';
 
 function WeatherCard(props) {
     const data = props.props;
     const className = data.className;
     const day = data.day;
     const dailyData = data.dailyData;
-    const weatherDescription = getSimplifiedDescription();
+    const weatherDescription = getSimplifiedDescription(dailyData.weather[0].description);
     const dailyTemp = data.dailyTemp;
     const dailyFeelsLike = data.dailyFeelsLike;
     const dailyTempFahrenheit = data.dailyTempFahrenheit;
     const dailyFeelsLikeFahrenheit = data.dailyFeelsLikeFahrenheit;
-
-    function getRainIcon(rainData) {
-        if (rainData < 10) {
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-cloud-rain-fill weatherIcon rainIcon" viewBox="0 0 16 16">
-                    <path d="M4.158 12.025a.5.5 0 0 1 .316.633l-.5 1.5a.5.5 0 1 1-.948-.316l.5-1.5a.5.5 0 0 1 .632-.317zm3 0a.5.5 0 0 1 .316.633l-1 3a.5.5 0 1 1-.948-.316l1-3a.5.5 0 0 1 .632-.317zm3 0a.5.5 0 0 1 .316.633l-.5 1.5a.5.5 0 1 1-.948-.316l.5-1.5a.5.5 0 0 1 .632-.317zm3 0a.5.5 0 0 1 .316.633l-1 3a.5.5 0 1 1-.948-.316l1-3a.5.5 0 0 1 .632-.317zm.247-6.998a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 11H13a3 3 0 0 0 .405-5.973z" />
-                </svg>
-            )
-        }
-        else {
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-cloud-rain-heavy-fill weatherIcon rainIcon" viewBox="0 0 16 16">
-                    <path d="M4.176 11.032a.5.5 0 0 1 .292.643l-1.5 4a.5.5 0 0 1-.936-.35l1.5-4a.5.5 0 0 1 .644-.293zm3 0a.5.5 0 0 1 .292.643l-1.5 4a.5.5 0 0 1-.936-.35l1.5-4a.5.5 0 0 1 .644-.293zm3 0a.5.5 0 0 1 .292.643l-1.5 4a.5.5 0 0 1-.936-.35l1.5-4a.5.5 0 0 1 .644-.293zm3 0a.5.5 0 0 1 .292.643l-1.5 4a.5.5 0 0 1-.936-.35l1.5-4a.5.5 0 0 1 .644-.293zm.229-7.005a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 10H13a3 3 0 0 0 .405-5.973z" />
-                </svg>
-            )
-        }
-    }
-
-    function getSimplifiedDescription() {
-        const description = dailyData.weather[0].description;
-        let words = description.split(" ");
-        // Remove words that are not necessary for the description
-        let unnecessaryWords = ["Very", "Intensity", "Shower", "Freezing", "Ragged", "With"];
-        words = words.filter(word => !unnecessaryWords.includes(word));
-
-        // Take the last two words as the simplified description
-        let simplifiedDescription = words.slice(-2).join(" ");
-
-        return simplifiedDescription;
-
-    }
 
     return data ? (
         //TODO: check for all weather description types
@@ -54,7 +24,7 @@ function WeatherCard(props) {
                     <img className="card-img-top" src={`http://openweathermap.org/img/wn/${dailyData.weather[0].icon}.png`} alt="weather icon" style={{ width: "64px", alignSelf: "flex-end" }} />
                 </div>
                 <p className="card-text description">
-                    {dailyData.weather[0].description} <br />
+                    {weatherDescription} <br />
                     {/* Feels like: {dailyFeelsLike}°C / {dailyFeelsLikeFahrenheit}°F<br /> */}
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-droplet-half weatherIcon" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z" />
