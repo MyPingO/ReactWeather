@@ -3,7 +3,7 @@ import WeatherCard from './WeatherCard';
 
 const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const date = new Date();
-let day = weekday[date.getDay()];
+let DAY = weekday[date.getDay()];
 function WeeklyForecast(props) {
     // const defaultWeatherData = props.data.default;
     const oneClickWeatherData = props.weatherData;
@@ -13,7 +13,7 @@ function WeeklyForecast(props) {
         //store array of WeatherCard components
         const weatherCards = [];
         for (let i = 1; i < 8; i++) {
-            const day = weekday[(date.getDay() + i) % 7];
+            const day = weekday[(DAY + i) % 7];
             const className = "dailyCard";
             const dailyData = oneClickWeatherData.daily[i];
             //get description and make every word capitalized
